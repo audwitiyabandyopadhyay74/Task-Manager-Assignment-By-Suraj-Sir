@@ -8,8 +8,10 @@ import {
 export const AddTaskcontroller = async (req, res) => {
   try {
     const { title, description } = req.body;
-    const userId = req.user.id;
+    const userId = req.session.userId;
     await AddTask(userId, title, description);
+    console.log(req.session.userId);
+
     res.status(200).json({
       success: true,
       message: "Task Creation Successful",
@@ -20,13 +22,17 @@ export const AddTaskcontroller = async (req, res) => {
       message: "Task Creation unSuccessful",
     });
     console.log(error);
+    // a
   }
 };
 
 export const FetchTaskcontroller = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.session.userId;
+    console.log(userId);
+
     const tasks = await FetchTask(userId);
+
     res.status(200).json({
       success: true,
       message: "Task Fetching Successful",
@@ -59,7 +65,7 @@ export const MarkAsDonecontroller = async (req, res) => {
 export const DeleteTaskcontroller = async (req, res) => {
   try {
     const { title } = req.body;
-     await DeleteTask(title);
+    await DeleteTask(title);
     res.status(200).json({
       success: true,
       message: "Task Deleting the task Successful",
