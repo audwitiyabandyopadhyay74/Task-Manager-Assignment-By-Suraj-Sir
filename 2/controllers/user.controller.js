@@ -28,12 +28,9 @@ export const login = async (req, res) => {
 
   try {
     const user = await loginUser(username, password);
-    // console.log(user);
-    req.session.user = {
-      id: user._id,
-      username: user.username,
-    };
-      req.session.save((err) => console.log(err));
+    req.session.userId = user._id;
+    req.session.username = user.username;
+    
     res.status(200).json({
       success: true,
       message: "Login Successfull",
@@ -49,7 +46,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    const logout = await logoutUser(res);
+    req.session.destroy();
     res.status(200).json({
       success: true,
       message: "Logout Successfull",
