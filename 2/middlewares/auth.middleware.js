@@ -1,23 +1,15 @@
-import jwt from "jsonwebtoken";
-
 export const isloggedin = async (req, res, next) => {
-  const token = req.cookies.token;
-  
-  if (!token) {
-    return res.status(401).json({
-      success: false,
-      message: "Unauthorized",
-    });
+  if (req.session && req.session.userId) {
+    
+  res.status(200).json({
+    success: true,
+    message: "authorized",
+  });
+    return next();
   }
-  
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({
-      success: false,
-      message: "Unauthorized",
-    });
-  }
+
+  res.status(401).json({
+    success: false,
+    message: "Unauthorized",
+  });
 };
